@@ -1,0 +1,44 @@
+{% extends "news/base.html" %}
+
+{% block title %}Tuckwells Newsroom | Independent reporting{% endblock %}
+
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Tuckwells Newsroom / Front page</p>
+            <h1>The daily brief</h1>
+            <p class="lead">Independent reporting and publisher-led coverage, edited with care and published when it is ready.</p>
+        </div>
+        <span class="count-label">{{ articles|length }} published</span>
+    </div>
+
+    {% if articles %}
+        <section class="content-grid" aria-label="Published articles">
+            {% for article in articles %}
+                <article class="article-card">
+                    <p class="article-card__meta">
+                        {% if article.author %}
+                            By <a href="{% url 'public_profile' article.author.id %}">{{ article.author.username }}</a>
+                        {% else %}
+                            {{ article.publisher.name }}
+                        {% endif %}
+                    </p>
+                    <h2><a href="{% url 'public_article_detail' article.id %}">{{ article.title }}</a></h2>
+                    <p class="article-card__content">{{ article.content|truncatechars:220 }}</p>
+                    <div class="card-footer">
+                        <span class="article-card__meta">{{ article.created_at|date:"d M Y" }}</span>
+                        <a href="{% url 'public_article_detail' article.id %}">Read story</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+    {% else %}
+        <section class="empty-state front-page__empty">
+            <div>
+                <strong>The first edition is still being assembled.</strong>
+                <p>Approved stories will appear here as soon as the newsroom's editors release them.</p>
+            </div>
+            <p class="front-page__note">New to the newsroom?<br><a href="{% url 'register' %}">Create a reader account</a> to get started.</p>
+        </section>
+    {% endif %}
+{% endblock %}

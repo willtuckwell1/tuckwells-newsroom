@@ -1,0 +1,31 @@
+{% extends "news/base.html" %}
+
+{% block title %}Newsletters | Tuckwells Newsroom{% endblock %}
+
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Curated reading</p>
+            <h1>Newsletters</h1>
+            <p class="lead">Editorial collections bringing the most considered reporting together.</p>
+        </div>
+        <span class="count-label">{{ newsletters|length }} collections</span>
+    </div>
+    {% if newsletters %}
+        <section class="content-grid" aria-label="Newsletters">
+            {% for newsletter in newsletters %}
+                <article class="article-card">
+                    <p class="article-card__meta">By {{ newsletter.author.username }}</p>
+                    <h2><a href="{% url 'newsletter_detail' newsletter.id %}">{{ newsletter.title }}</a></h2>
+                    <p class="article-card__content">{{ newsletter.description|truncatechars:220 }}</p>
+                    <div class="card-footer">
+                        <span class="article-card__meta">{{ newsletter.articles.count }} articles</span>
+                        <a href="{% url 'newsletter_detail' newsletter.id %}">Read collection</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+    {% else %}
+        <p class="empty-state">No newsletters have been published yet.</p>
+    {% endif %}
+{% endblock %}

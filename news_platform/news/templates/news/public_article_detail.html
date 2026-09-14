@@ -1,0 +1,19 @@
+{% extends "news/base.html" %}
+
+{% block title %}{{ article.title }} | Tuckwells Newsroom{% endblock %}
+
+{% block content %}
+    <article class="form-panel story-detail">
+        <p class="eyebrow">Published {{ article.created_at|date:"d M Y" }}</p>
+        <h1>{{ article.title }}</h1>
+        <p class="article-card__meta">
+            {% if article.author %}
+                By <a href="{% url 'public_profile' article.author.id %}">{{ article.author.username }}</a>
+            {% else %}
+                Published by {{ article.publisher.name }}
+            {% endif %}
+        </p>
+        <div class="story-detail__body">{{ article.content|linebreaks }}</div>
+        <p><a href="{% url 'home' %}">Back to latest stories</a></p>
+    </article>
+{% endblock %}

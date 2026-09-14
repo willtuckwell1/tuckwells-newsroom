@@ -1,0 +1,27 @@
+{% extends "news/base.html" %}
+
+{% block title %}{{ newsletter.title }} | Tuckwells Newsroom{% endblock %}
+
+{% block content %}
+    <article class="form-panel story-detail">
+        <p class="eyebrow">Curated collection</p>
+        <h1>{{ newsletter.title }}</h1>
+        <p class="article-card__meta">By {{ newsletter.author.username }} · {{ newsletter.created_at|date:"d M Y" }}</p>
+        <div class="story-detail__body">{{ newsletter.description|linebreaks }}</div>
+        <h2>Inside this collection</h2>
+        <ul class="content-list">
+            {% for article in newsletter.articles.all %}
+                <li>
+                    <div>
+                        <span class="content-list__title">{{ article.title }}</span>
+                        <span class="table-meta">{{ article.created_at|date:"d M Y" }}</span>
+                    </div>
+                    <a href="{% url 'public_article_detail' article.id %}">Read</a>
+                </li>
+            {% empty %}
+                <li class="empty-state">This collection has no articles yet.</li>
+            {% endfor %}
+        </ul>
+        <p><a class="button button--outline" href="{% url 'newsletter_list' %}">Back to newsletters</a></p>
+    </article>
+{% endblock %}

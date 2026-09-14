@@ -1,0 +1,18 @@
+{% extends "news/base.html" %}
+
+{% block title %}Delete {{ content_type }} | Tuckwells Newsroom{% endblock %}
+
+{% block content %}
+    <section class="form-panel delete-panel">
+        <p class="eyebrow">Permanent action</p>
+        <h1>Delete {{ content_type }}</h1>
+        <p class="lead">This will permanently remove "{{ object }}".</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button class="button button--danger" type="submit">Delete {{ content_type }}</button>
+                <a class="button button--outline" href="{% url 'journalist_dashboard' %}">Back to dashboard</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "news/base.html" %}
+
+{% block title %}Profile Settings | Tuckwells Newsroom{% endblock %}
+
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Account centre</p>
+            <h1>Profile settings</h1>
+            <p class="lead">Keep your public identity, privacy choices, and notifications up to date.</p>
+        </div>
+    </div>
+
+    <div class="settings-grid">
+        <section class="form-panel">
+            <div class="profile-heading">
+                {% if user.profile_picture %}
+                    <img class="profile-avatar" src="{{ user.profile_picture.url }}" alt="Profile picture for {{ user.username }}">
+                {% else %}
+                    <span class="profile-avatar profile-avatar--initial" aria-hidden="true">{{ user.username|first|upper }}</span>
+                {% endif %}
+                <div>
+                    <p class="eyebrow">Your profile</p>
+                    <h2>{{ user.username }}</h2>
+                </div>
+            </div>
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field {% if field.field.widget.input_type == 'checkbox' %}field--checkbox{% endif %}">
+                        {% if field.field.widget.input_type == 'checkbox' %}
+                            {{ field }}
+                            <div class="checkbox-copy">
+                                {{ field.label_tag }}
+                                {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+                            </div>
+                        {% else %}
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+                        {% endif %}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+                {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+                <div class="form-actions">
+                    <button class="button button--primary" type="submit">Save profile</button>
+                    <a class="button button--outline" href="{% url 'home' %}">Back to newsroom</a>
+                </div>
+            </form>
+        </section>
+
+        <aside class="settings-rail">
+            <section class="panel settings-card">
+                <p class="eyebrow">Security</p>
+                <h2>Password</h2>
+                <p class="table-meta">Update your password using your current password for verification.</p>
+                <a class="button button--outline" href="{% url 'password_change' %}">Change password</a>
+            </section>
+            <section class="panel settings-card">
+                <p class="eyebrow">Privacy</p>
+                <h2>Your choices</h2>
+                <p class="table-meta">Your privacy controls are saved with your profile. You can change them at any time.</p>
+            </section>
+        </aside>
+    </div>
+
+    {% if user.role == 'reader' %}
+        <div class="dashboard-grid subscription-grid">
+            <section class="panel">
+                <div class="panel__header"><h2>Follow journalists</h2></div>
+                <ul class="content-list">
+                    {% for journalist in journalists %}
+                        <li>
+                            <a class="content-list__title" href="{% url 'public_profile' journalist.id %}">{{ journalist.username }}</a>
+                            <form method="post" action="{% url 'toggle_journalist_subscription' journalist.id %}">
+                                {% csrf_token %}
+                                <button class="button button--outline" type="submit">
+                                    {% if journalist in user.subscribed_journalists.all %}Unfollow{% else %}Follow{% endif %}
+                                </button>
+                            </form>
+                        </li>
+                    {% empty %}
+                        <li class="empty-state">No journalists are available yet.</li>
+                    {% endfor %}
+                </ul>
+            </section>
+            <section class="panel">
+                <div class="panel__header"><h2>Follow publishers</h2></div>
+                <ul class="content-list">
+                    {% for publisher in publishers %}
+                        <li>
+                            <span class="content-list__title">{{ publisher.name }}</span>
+                            <form method="post" action="{% url 'toggle_publisher_subscription' publisher.id %}">
+                                {% csrf_token %}
+                                <button class="button button--outline" type="submit">
+                                    {% if publisher in user.subscribed_publishers.all %}Unfollow{% else %}Follow{% endif %}
+                                </button>
+                            </form>
+                        </li>
+                    {% empty %}
+                        <li class="empty-state">No publishers are available yet.</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+    {% endif %}
+{% endblock %}

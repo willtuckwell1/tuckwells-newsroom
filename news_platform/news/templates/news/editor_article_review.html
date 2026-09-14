@@ -1,0 +1,41 @@
+{% extends "news/base.html" %}
+
+{% block title %}Review Queue | Tuckwells Newsroom{% endblock %}
+
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Editorial desk</p>
+            <h1>Review queue</h1>
+            <p class="lead">Assess submitted reporting before it is released to readers.</p>
+        </div>
+        <span class="count-label">{{ pending_articles|length }} awaiting review</span>
+    </div>
+
+    {% if pending_articles %}
+        <section class="content-grid" aria-label="Articles awaiting review">
+            {% for article in pending_articles %}
+                <article class="article-card">
+                    <p class="article-card__meta">
+                        {% if article.author %}
+                            Independent journalist: {{ article.author.username }}
+                        {% else %}
+                            Publisher: {{ article.publisher.name }}
+                        {% endif %}
+                    </p>
+                    <h2>{{ article.title }}</h2>
+                    <p class="article-card__content">{{ article.content|truncatechars:220 }}</p>
+                    <div class="card-footer">
+                        <span class="article-card__meta">Submitted {{ article.created_at|date:"d M Y" }}</span>
+                        <form method="post" action="{% url 'approve_article' article.id %}">
+                            {% csrf_token %}
+                            <button class="button button--primary" type="submit">Approve article</button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+    {% else %}
+        <p class="empty-state">The review queue is clear. New submissions will appear here.</p>
+    {% endif %}
+{% endblock %}

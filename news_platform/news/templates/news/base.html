@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#123b3d">
+    <title>{% block title %}Tuckwells Newsroom{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'news/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="brand" href="{% url 'home' %}" aria-label="Tuckwells Newsroom home">
+                <span class="brand__mark" aria-hidden="true">N</span>
+                <span>
+                    <strong>Tuckwells</strong>
+                    <small>Newsroom</small>
+                </span>
+            </a>
+            <nav class="site-nav" aria-label="Main navigation">
+                <a href="{% url 'home' %}">Latest</a>
+                <a href="{% url 'newsletter_list' %}">Newsletters</a>
+                {% if user.is_authenticated %}
+                    {% if user.role == 'journalist' or user.role == 'editor' %}
+                        <a href="{% url 'journalist_dashboard' %}">Dashboard</a>
+                    {% endif %}
+                    {% if user.role == 'editor' %}
+                        <a href="{% url 'editor_article_review' %}">Review queue</a>
+                    {% endif %}
+                    <a href="{% url 'profile_settings' %}">Profile</a>
+                    <span class="user-chip">{{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="button button--quiet" type="submit">Sign out</button>
+                    </form>
+                {% else %}
+                    <a class="button button--primary" href="{% url 'login' %}">Sign in</a>
+                    <a href="{% url 'register' %}">Create account</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    {% if messages %}
+        <div class="messages" aria-live="polite">
+            {% for message in messages %}
+                <p class="message">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="page-shell">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

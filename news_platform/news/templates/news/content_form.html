@@ -1,0 +1,27 @@
+{% extends "news/base.html" %}
+
+{% block title %}{{ page_title }} | Tuckwells Newsroom{% endblock %}
+
+{% block content %}
+    <section class="form-panel">
+        <p class="eyebrow">Newsroom workspace</p>
+        <h1>{{ page_title }}</h1>
+        <p class="lead">Complete the details below, then save your changes.</p>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="field">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+            {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+            <div class="form-actions">
+                <button class="button button--primary" type="submit">Save changes</button>
+                <a class="button button--outline" href="{% url 'journalist_dashboard' %}">Back to dashboard</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

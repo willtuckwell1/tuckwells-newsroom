@@ -1,0 +1,8 @@
+.env
+.DS_Store
+.venv/
+__pycache__/
+*.py[cod]
+news_platform/db.sqlite3
+news_platform/**/__pycache__/
+media/

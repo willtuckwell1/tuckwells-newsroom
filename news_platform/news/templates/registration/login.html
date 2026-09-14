@@ -1,0 +1,28 @@
+{% extends "news/base.html" %}
+
+{% block title %}Sign In | Tuckwells Newsroom{% endblock %}
+
+{% block content %}
+    <section class="auth-shell">
+        <div class="auth-panel">
+            <p class="eyebrow">Member access</p>
+            <h1>Welcome back</h1>
+            <p class="auth-note">Sign in to access your newsroom workspace.</p>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+                {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+                <input type="hidden" name="next" value="{{ next }}">
+                <button class="button button--primary" type="submit">Sign in</button>
+            </form>
+            <p class="auth-note"><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+            <p class="auth-note">New here? <a href="{% url 'register' %}">Create an account</a></p>
+        </div>
+    </section>
+{% endblock %}

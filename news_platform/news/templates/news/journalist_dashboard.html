@@ -1,0 +1,86 @@
+{% extends "news/base.html" %}
+
+{% block title %}Content Dashboard | Tuckwells Newsroom{% endblock %}
+
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Newsroom workspace</p>
+            <h1>Content dashboard</h1>
+            <p class="lead">Create, shape, and track your reporting in one place.</p>
+        </div>
+        <div class="dashboard-actions">
+            {% if user.role == 'journalist' %}
+                <a class="button button--primary" href="{% url 'article_create' %}">Create article</a>
+            {% endif %}
+            {% if user.role == 'editor' %}
+                <a class="button button--primary" href="{% url 'publisher_create' %}">Create publisher</a>
+            {% endif %}
+            <a class="button button--outline" href="{% url 'newsletter_create' %}">Create newsletter</a>
+        </div>
+    </div>
+
+    {% if publishers is not None %}
+        <section class="panel">
+            <div class="panel__header"><h2>Publishers</h2><span class="count-label">{{ publishers|length }}</span></div>
+            <ul class="content-list">
+                {% for publisher in publishers %}
+                    <li>
+                        <div>
+                            <span class="content-list__title">{{ publisher.name }}</span>
+                            <span class="table-meta">{{ publisher.journalists.count }} journalists · {{ publisher.editors.count }} editors</span>
+                        </div>
+                        <div class="content-list__actions">
+                            <a href="{% url 'publisher_update' publisher.id %}">Edit</a>
+                            <a href="{% url 'publisher_delete' publisher.id %}">Delete</a>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="empty-state">No publishers have been created yet.</li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+    <div class="dashboard-grid">
+        <section class="panel">
+            <div class="panel__header"><h2>Articles</h2><span class="count-label">{{ articles|length }}</span></div>
+            <ul class="content-list">
+                {% for article in articles %}
+                    <li>
+                        <div>
+                            <span class="content-list__title">{{ article.title }}</span>
+                            {% if article.approved %}
+                                <span class="status status--approved">Approved</span>
+                            {% else %}
+                                <span class="status status--pending">Awaiting approval</span>
+                            {% endif %}
+                        </div>
+                        <div class="content-list__actions">
+                            <a href="{% url 'article_update' article.id %}">Edit</a>
+                            <a href="{% url 'article_delete' article.id %}">Delete</a>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="empty-state">No articles yet.</li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section class="panel">
+            <div class="panel__header"><h2>Newsletters</h2><span class="count-label">{{ newsletters|length }}</span></div>
+            <ul class="content-list">
+                {% for newsletter in newsletters %}
+                    <li>
+                        <div><span class="content-list__title">{{ newsletter.title }}</span><span class="table-meta">Curated collection</span></div>
+                        <div class="content-list__actions">
+                            <a href="{% url 'newsletter_update' newsletter.id %}">Edit</a>
+                            <a href="{% url 'newsletter_delete' newsletter.id %}">Delete</a>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="empty-state">No newsletters yet.</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+{% endblock %}
