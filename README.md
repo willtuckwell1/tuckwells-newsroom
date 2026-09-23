@@ -221,6 +221,25 @@ http://127.0.0.1:8000/
 
 Stop the server with `Control + C` in the terminal where it is running.
 
+## Run With Docker
+
+Docker runs the application with SQLite inside the container, so MariaDB is not
+required for this quick local demonstration. Make sure Docker Desktop is open,
+then run these commands from the project folder:
+
+```bash
+docker build -t tuckwells-newsroom .
+docker run --rm -p 8000:8000 tuckwells-newsroom
+```
+
+Open `http://127.0.0.1:8000/` in your browser. The container applies database
+migrations automatically before starting Django. Stop it with `Control + C`.
+
+The Docker image does not copy `.env`, virtual environments, Git metadata, or
+local database files. For a real deployment, provide a strong
+`DJANGO_SECRET_KEY` and configure the database and other secrets through the
+deployment environment rather than committing them to the repository.
+
 ## Main Website Workflows
 
 ### Reader
