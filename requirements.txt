@@ -4,3 +4,5 @@ Pillow==12.3.0
 mysqlclient==2.2.7
 python-dotenv==1.0.1
 requests==2.34.2
+sphinx==8.2.3
+sphinx-rtd-theme==3.0.2
