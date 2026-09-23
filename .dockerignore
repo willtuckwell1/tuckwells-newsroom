@@ -1,0 +1,13 @@
+.env
+.git
+.gitignore
+.venv/
+.venv-1/
+.venv-2/
+__pycache__/
+*.py[cod]
+news_platform/**/__pycache__/
+news_platform/db.sqlite3
+news_platform/media/
+docs/_build/
+.DS_Store
